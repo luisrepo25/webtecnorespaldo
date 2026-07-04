@@ -1,0 +1,170 @@
+/* resources/css/themes.css */
+
+/* Adultos — Día claro, verde institucional suave */
+:root, html[data-theme="adults"] {
+    --bg-color: #f5faf6;
+    --card-bg: #ffffff;
+    --text-color: #1c2e22;
+    --text-secondary: #5a7a65;
+    --nav-bg: #ffffff;
+    --border-color: #ddeee4;
+    --primary-color: #1e7a40;
+    --primary-hover: #165f31;
+    --primary-text: #ffffff;
+    --font-family: 'Outfit', 'Inter', system-ui, sans-serif;
+    --border-radius: 0.5rem;
+    --border-width: 1px;
+}
+
+/* Jóvenes — Verde oscuro con contraste claro entre fondo y cards */
+html[data-theme="youth"] {
+    --bg-color: #111f17;
+    --card-bg: #2a4a35;
+    --text-color: #e4f2e8;
+    --text-secondary: #85b898;
+    --nav-bg: #0d1a11;
+    --border-color: #355c42;
+    --primary-color: #34c26a;
+    --primary-hover: #2dab5c;
+    --primary-text: #ffffff;
+    --font-family: 'Outfit', 'Inter', system-ui, sans-serif;
+    --border-radius: 0.5rem;
+    --border-width: 1px;
+}
+
+/* Niños — Verde menta suave y dorado */
+html[data-theme="kids"] {
+    --bg-color: #ecfdf5;
+    --card-bg: #f0fff8;
+    --text-color: #064e3b;
+    --text-secondary: #059669;
+    --nav-bg: #d1fae5;
+    --border-color: #a7f3d0;
+    --primary-color: #10b981;
+    --primary-hover: #059669;
+    --primary-text: #ffffff;
+    --font-family: 'Comic Neue', 'Comic Sans MS', cursive, sans-serif;
+    --border-radius: 1.2rem;
+    --border-width: 2px;
+}
+
+/* ── MODO OSCURO — Adultos ────────────────────────────────────────────── */
+html[data-theme="adults"][data-darkmode="on"] {
+    --bg-color: #0f1f16;
+    --card-bg: #1a2f22;
+    --text-color: #d4eddd;
+    --text-secondary: #7aab8a;
+    --nav-bg: #0a150e;
+    --border-color: #2a4433;
+    --primary-color: #1e7a40;
+    --primary-hover: #165f31;
+    --primary-text: #ffffff;
+}
+
+/* ── MODO OSCURO — Niños ──────────────────────────────────────────────── */
+html[data-theme="kids"][data-darkmode="on"] {
+    --bg-color: #081a12;
+    --card-bg: #102a1c;
+    --text-color: #b8f5d4;
+    --text-secondary: #4ade80;
+    --nav-bg: #05110c;
+    --border-color: #1a4a2e;
+    --primary-color: #10b981;
+    --primary-hover: #059669;
+    --primary-text: #ffffff;
+    --font-family: 'Comic Neue', 'Comic Sans MS', cursive, sans-serif;
+    --border-radius: 1.2rem;
+    --border-width: 2px;
+}
+
+/* youth ya es oscuro — data-darkmode="on" no cambia nada */
+
+/* Alto contraste — Verde oscuro, menos agresivo */
+html[data-contrast="high"] {
+    --bg-color: #071510 !important;
+    --card-bg: #0e2118 !important;
+    --text-color: #e8f5ee !important;
+    --text-secondary: #6dbf8a !important;
+    --nav-bg: #050f0b !important;
+    --border-color: #2d7a4a !important;
+    --primary-color: #2d9e5c !important;
+    --primary-hover: #3ab870 !important;
+    --primary-text: #ffffff !important;
+    --border-width: 1.5px !important;
+}
+
+/* Global Selectors applying the CSS variables */
+body, html {
+    background-color: var(--bg-color) !important;
+    color: var(--text-color) !important;
+    font-size: calc(16px * var(--font-scale, 1)) !important;
+    font-family: var(--font-family) !important;
+    transition: background-color 0.2s ease, color 0.2s ease, font-size 0.15s ease;
+}
+
+/* Overriding Tailwind utilities globally using our variables */
+.bg-gray-100, .bg-gray-50, .min-h-screen {
+    background-color: var(--bg-color) !important;
+}
+
+.bg-white {
+    background-color: var(--card-bg) !important;
+}
+
+.text-gray-800, .text-gray-900, .text-gray-700, .text-black {
+    color: var(--text-color) !important;
+}
+
+.text-gray-500, .text-gray-600, .text-gray-400 {
+    color: var(--text-secondary) !important;
+}
+
+/* Borders and Shadows overrides */
+.border-b, .border-t, .border, .border-gray-100, .border-gray-200 {
+    border-color: var(--border-color) !important;
+    border-width: var(--border-width) !important;
+}
+
+.shadow, .shadow-sm, .shadow-md {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03) !important;
+    /* Disable shadows in high contrast */
+    html[data-contrast="high"] & {
+        box-shadow: none !important;
+    }
+}
+
+.sm\:rounded-lg, .rounded-md, .rounded-lg {
+    border-radius: var(--border-radius) !important;
+}
+
+/* Primary Button / Form button overrides */
+.bg-gray-800, button[type="submit"], button.bg-gray-800, .bg-indigo-600 {
+    background-color: var(--primary-color) !important;
+    color: var(--primary-text) !important;
+    border: none !important;
+}
+
+.hover\:bg-gray-700:hover, button[type="submit"]:hover, button.bg-gray-800:hover, .bg-indigo-700:hover {
+    background-color: var(--primary-hover) !important;
+}
+
+/* Links and active classes */
+.text-indigo-600, .hover\:text-gray-900:hover {
+    color: var(--primary-color) !important;
+}
+
+/* Kids specific playful button shake on hover */
+html[data-theme="kids"] button:hover {
+    animation: kids-shake 0.3s;
+    animation-iteration-count: infinite;
+}
+
+@keyframes kids-shake {
+    0% { transform: translate(1px, 1px) rotate(0deg); }
+    10% { transform: translate(-1px, -2px) rotate(-1deg); }
+    30% { transform: translate(0px, 2px) rotate(0deg); }
+    50% { transform: translate(1px, -1px) rotate(1deg); }
+    70% { transform: translate(-1px, 1px) rotate(-1deg); }
+    90% { transform: translate(0px, 1px) rotate(0deg); }
+    100% { transform: translate(1px, -2px) rotate(-1deg); }
+}
