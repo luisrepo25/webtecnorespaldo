@@ -12,27 +12,27 @@ class PeriodoController extends Controller
     {
     }
 
-    public function index()
+    public function listar()
     {
         return $this->periodos->listar();
     }
 
-    public function store(Request $request)
+    public function registrarPeriodo(Request $request)
     {
         return $this->periodos->registrarPeriodo($request);
     }
 
-    public function update(Request $request, int $id)
+    public function actualizarPeriodo(Request $request, int $id)
     {
         return $this->periodos->actualizarPeriodo($request, $id);
     }
 
-    public function toggleActivo(int $id)
+    public function cambiarEstado(int $id)
     {
         return $this->periodos->cambiarEstado($id);
     }
 
-    public function storeLote(Request $request)
+    public function registrarLote(Request $request)
     {
         return $this->periodos->registrarLote($request);
     }
@@ -42,7 +42,7 @@ class PeriodoController extends Controller
         return $this->periodos->clonarSiguienteAnio();
     }
 
-    public function destroy(int $id)
+    public function eliminarPeriodo(int $id)
     {
         return $this->periodos->eliminarPeriodo($id);
     }

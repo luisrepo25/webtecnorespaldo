@@ -12,27 +12,27 @@ class MallaController extends Controller
     {
     }
 
-    public function storeNivel(Request $request, int $idCarrera)
+    public function agregarNivel(Request $request, int $idCarrera)
     {
         return $this->malla->agregarNivel($request, $idCarrera);
     }
 
-    public function destroyNivel(int $idNivel)
+    public function eliminarNivel(int $idNivel)
     {
         return $this->malla->eliminarNivel($idNivel);
     }
 
-    public function storeMalla(Request $request)
+    public function asignarMateriaAMalla(Request $request)
     {
         return $this->malla->asignarMateriaAMalla($request);
     }
 
-    public function destroyMalla(int $idMalla)
+    public function quitarDeMalla(int $idMalla)
     {
         return $this->malla->quitarDeMalla($idMalla);
     }
 
-    public function storeMateriaNueva(Request $request, int $idCarrera)
+    public function crearYAsignarMateria(Request $request, int $idCarrera)
     {
         return $this->malla->crearYAsignarMateria($request, $idCarrera);
     }

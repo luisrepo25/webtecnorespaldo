@@ -22,6 +22,8 @@ class Inscripcion extends Model
     ];
 
     protected $casts = [
+        'id_estudiante'      => 'integer',
+        'id_oferta'          => 'integer',
         'aprobado'           => 'boolean',
         'calificacion_final' => 'decimal:2',
         'fecha_inscripcion'  => 'datetime',

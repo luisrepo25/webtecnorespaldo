@@ -12,22 +12,22 @@ class CarreraController extends Controller
     {
     }
 
-    public function index(Request $request)
+    public function listar(Request $request)
     {
         return $this->carreras->listar($request);
     }
 
-    public function store(Request $request)
+    public function registrarCarrera(Request $request)
     {
         return $this->carreras->registrarCarrera($request);
     }
 
-    public function update(Request $request, int $id)
+    public function actualizarCarrera(Request $request, int $id)
     {
         return $this->carreras->actualizarCarrera($request, $id);
     }
 
-    public function toggleActivo(int $id)
+    public function cambiarEstado(int $id)
     {
         return $this->carreras->cambiarEstado($id);
     }

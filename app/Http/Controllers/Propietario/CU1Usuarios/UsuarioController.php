@@ -27,7 +27,7 @@ class UsuarioController extends Controller
         };
     }
 
-    public function index(Request $request)
+    public function listar(Request $request)
     {
         $query = Usuario::with('rol')
             ->orderBy('id_rol')
@@ -59,7 +59,7 @@ class UsuarioController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function registrarUsuario(Request $request)
     {
         $permitidos = $this->rolesPermitidos();
 
@@ -107,7 +107,7 @@ class UsuarioController extends Controller
         return redirect()->back()->with('success', 'Usuario creado correctamente.');
     }
 
-    public function update(Request $request, int $id)
+    public function actualizarUsuario(Request $request, int $id)
     {
         $usuario = Usuario::findOrFail($id);
 
@@ -136,7 +136,7 @@ class UsuarioController extends Controller
         return redirect()->back()->with('success', 'Usuario actualizado correctamente.');
     }
 
-    public function toggleActivo(int $id)
+    public function cambiarEstado(int $id)
     {
         $usuario = Usuario::findOrFail($id);
 

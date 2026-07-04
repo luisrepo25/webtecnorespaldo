@@ -25,6 +25,9 @@ class Periodo extends Model
 
     protected $casts = [
         'activo'                   => 'boolean',
+        'id_nivel'                 => 'integer',
+        'id_carrera'               => 'integer',
+        'max_materias'             => 'integer',
         'fecha_inicio'             => 'date',
         'fecha_fin'                => 'date',
         'fecha_inicio_inscripcion' => 'date',

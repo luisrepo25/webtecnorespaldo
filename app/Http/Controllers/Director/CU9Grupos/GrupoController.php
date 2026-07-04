@@ -12,29 +12,29 @@ class GrupoController extends Controller
     {
     }
 
-    public function index()
+    public function listar()
     {
-        return $this->grupos->index();
+        return $this->grupos->listar();
     }
 
-    public function store(Request $request)
+    public function registrarGrupo(Request $request)
     {
-        return $this->grupos->store($request);
+        return $this->grupos->registrarGrupo($request);
     }
 
-    public function update(Request $request, int $id)
+    public function actualizarGrupo(Request $request, int $id)
     {
-        return $this->grupos->update($request, $id);
+        return $this->grupos->actualizarGrupo($request, $id);
     }
 
-    public function toggleActivo(int $id)
+    public function cambiarEstado(int $id)
     {
-        return $this->grupos->toggleActivo($id);
+        return $this->grupos->cambiarEstado($id);
     }
 
-    public function destroy(int $id)
+    public function eliminarGrupo(int $id)
     {
-        return $this->grupos->destroy($id);
+        return $this->grupos->eliminarGrupo($id);
     }
 
     public function clonar(Request $request)

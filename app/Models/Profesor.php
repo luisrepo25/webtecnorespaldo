@@ -15,6 +15,15 @@ class Profesor extends Model
         'titulo_maximo', 'fecha_contratacion', 'sueldo_base', 'observaciones', 'archivo_cv',
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'id_usuario'         => 'integer',
+            'fecha_contratacion' => 'date',
+            'sueldo_base'        => 'decimal:2',
+        ];
+    }
+
     public function usuario()
     {
         return $this->belongsTo(Usuario::class, 'id_usuario', 'id_usuario');

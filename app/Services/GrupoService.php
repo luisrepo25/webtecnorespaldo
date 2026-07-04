@@ -8,7 +8,7 @@ use Inertia\Inertia;
 
 class GrupoService
 {
-    public function index()
+    public function listar()
     {
         // Vacantes ocupadas se cuentan desde el inicio de la convocatoria de
         // inscripción vigente (no por estado='activo'): el cupo de este mes no debe
@@ -184,7 +184,7 @@ class GrupoService
         ]);
     }
 
-    public function store(Request $request)
+    public function registrarGrupo(Request $request)
     {
         $request->validate([
             'id_materia'   => 'required|integer|exists:materias,id_materia',
@@ -319,7 +319,7 @@ class GrupoService
         return redirect()->route('director.grupos.index')->with('success', $msg);
     }
 
-    public function update(Request $request, int $id)
+    public function actualizarGrupo(Request $request, int $id)
     {
         $request->validate([
             'vacantes_max'    => 'required|integer|min:1|max:500',
@@ -487,7 +487,7 @@ class GrupoService
         return redirect()->route('director.grupos.index')->with('success', $msg);
     }
 
-    public function toggleActivo(int $id)
+    public function cambiarEstado(int $id)
     {
         $grupo = DB::table('grupos')->where('id_oferta', $id)->first();
         if (!$grupo) abort(404);
@@ -505,7 +505,7 @@ class GrupoService
             ->with('success', $grupo->activo ? 'Grupo(s) desactivado(s).' : 'Grupo(s) activado(s).');
     }
 
-    public function destroy(int $id)
+    public function eliminarGrupo(int $id)
     {
         $grupo = DB::table('grupos')->where('id_oferta', $id)->first();
         if (!$grupo) abort(404);

@@ -15,6 +15,15 @@ class Estudiante extends Model
         'tutor_nombre', 'tutor_telefono', 'observaciones', 'id_carrera_actual',
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'id_usuario'                => 'integer',
+            'id_carrera_actual'         => 'integer',
+            'fecha_inscripcion_inicial' => 'date',
+        ];
+    }
+
     public function usuario()
     {
         return $this->belongsTo(Usuario::class, 'id_usuario', 'id_usuario');

@@ -71,6 +71,7 @@ class Usuario extends Authenticatable implements JWTSubject
             'email_verified_at' => 'datetime',
             'activo' => 'boolean',
             'bloqueado' => 'boolean',
+            'id_rol' => 'integer',
         ];
     }
 

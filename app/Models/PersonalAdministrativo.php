@@ -15,6 +15,15 @@ class PersonalAdministrativo extends Model
         'fecha_ingreso', 'oficina', 'sueldo_base', 'observaciones',
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'id_usuario'    => 'integer',
+            'fecha_ingreso' => 'date',
+            'sueldo_base'   => 'decimal:2',
+        ];
+    }
+
     public function usuario()
     {
         return $this->belongsTo(Usuario::class, 'id_usuario', 'id_usuario');

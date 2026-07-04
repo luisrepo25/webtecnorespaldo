@@ -12,22 +12,22 @@ class MateriaController extends Controller
     {
     }
 
-    public function index(Request $request)
+    public function listar(Request $request)
     {
         return $this->materias->listar($request);
     }
 
-    public function store(Request $request)
+    public function registrarMateria(Request $request)
     {
         return $this->materias->registrarMateria($request);
     }
 
-    public function update(Request $request, int $id)
+    public function actualizarMateria(Request $request, int $id)
     {
         return $this->materias->actualizarMateria($request, $id);
     }
 
-    public function toggleActivo(int $id)
+    public function cambiarEstado(int $id)
     {
         return $this->materias->cambiarEstado($id);
     }

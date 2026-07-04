@@ -111,18 +111,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // CU1 — Gestión de Usuarios — lectura para todos los roles admin
     Route::middleware('role:propietario,director,secretaria')->prefix('propietario')->name('propietario.')->group(function () {
-        Route::get('/usuarios', [UsuarioController::class, 'index'])->name('usuarios.index');
+        Route::get('/usuarios', [UsuarioController::class, 'listar'])->name('usuarios.index');
     });
 
     // CU1 — store, update, password: propietario + director + secretaria
     Route::middleware('role:propietario,director,secretaria')->prefix('propietario')->name('propietario.')->group(function () {
-        Route::post('/usuarios', [UsuarioController::class, 'store'])->name('usuarios.store');
-        Route::put('/usuarios/{id}', [UsuarioController::class, 'update'])->name('usuarios.update');
+        Route::post('/usuarios', [UsuarioController::class, 'registrarUsuario'])->name('usuarios.store');
+        Route::put('/usuarios/{id}', [UsuarioController::class, 'actualizarUsuario'])->name('usuarios.update');
         Route::patch('/usuarios/{id}/password', [UsuarioController::class, 'cambiarPassword'])->name('usuarios.password');
     });
     // CU1 — toggle-activo: propietario + director (secretaria no puede desactivar/reactivar)
     Route::middleware('role:propietario,director')->prefix('propietario')->name('propietario.')->group(function () {
-        Route::patch('/usuarios/{id}/toggle-activo', [UsuarioController::class, 'toggleActivo'])->name('usuarios.toggle-activo');
+        Route::patch('/usuarios/{id}/toggle-activo', [UsuarioController::class, 'cambiarEstado'])->name('usuarios.toggle-activo');
     });
 
     // CU13 — Seguimiento Académico (propietario + director + secretaria)
@@ -187,47 +187,47 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // CU3/4/5/8/9 — Lectura: propietario, director, secretaria
     Route::middleware('role:propietario,director,secretaria')->prefix('director')->name('director.')->group(function () {
-        Route::get('/carreras', [\App\Http\Controllers\Director\CU4Carreras\CarreraController::class, 'index'])->name('carreras.index');
+        Route::get('/carreras', [\App\Http\Controllers\Director\CU4Carreras\CarreraController::class, 'listar'])->name('carreras.index');
         Route::get('/carreras/{id}/materias', [\App\Http\Controllers\Director\CU3Materias\MateriaController::class, 'porCarrera'])->name('carreras.materias');
-        Route::get('/materias', [\App\Http\Controllers\Director\CU3Materias\MateriaController::class, 'index'])->name('materias.index');
-        Route::get('/periodos', [\App\Http\Controllers\Director\CU8Periodos\PeriodoController::class, 'index'])->name('periodos.index');
-        Route::get('/grupos', [\App\Http\Controllers\Director\CU9Grupos\GrupoController::class, 'index'])->name('grupos.index');
+        Route::get('/materias', [\App\Http\Controllers\Director\CU3Materias\MateriaController::class, 'listar'])->name('materias.index');
+        Route::get('/periodos', [\App\Http\Controllers\Director\CU8Periodos\PeriodoController::class, 'listar'])->name('periodos.index');
+        Route::get('/grupos', [\App\Http\Controllers\Director\CU9Grupos\GrupoController::class, 'listar'])->name('grupos.index');
         Route::get('/grupos/{id}/inscritos', [\App\Http\Controllers\Director\CU9Grupos\GrupoController::class, 'inscritos'])->name('grupos.inscritos');
     });
 
     // CU3/4/5/8/9 — Escritura: solo propietario y director
     Route::middleware('role:propietario,director')->prefix('director')->name('director.')->group(function () {
         // CU4 Carreras
-        Route::post('/carreras', [\App\Http\Controllers\Director\CU4Carreras\CarreraController::class, 'store'])->name('carreras.store');
-        Route::put('/carreras/{id}', [\App\Http\Controllers\Director\CU4Carreras\CarreraController::class, 'update'])->name('carreras.update');
-        Route::patch('/carreras/{id}/toggle-activo', [\App\Http\Controllers\Director\CU4Carreras\CarreraController::class, 'toggleActivo'])->name('carreras.toggle-activo');
+        Route::post('/carreras', [\App\Http\Controllers\Director\CU4Carreras\CarreraController::class, 'registrarCarrera'])->name('carreras.store');
+        Route::put('/carreras/{id}', [\App\Http\Controllers\Director\CU4Carreras\CarreraController::class, 'actualizarCarrera'])->name('carreras.update');
+        Route::patch('/carreras/{id}/toggle-activo', [\App\Http\Controllers\Director\CU4Carreras\CarreraController::class, 'cambiarEstado'])->name('carreras.toggle-activo');
 
         // CU3 Materias
-        Route::post('/materias', [\App\Http\Controllers\Director\CU3Materias\MateriaController::class, 'store'])->name('materias.store');
-        Route::put('/materias/{id}', [\App\Http\Controllers\Director\CU3Materias\MateriaController::class, 'update'])->name('materias.update');
-        Route::patch('/materias/{id}/toggle-activo', [\App\Http\Controllers\Director\CU3Materias\MateriaController::class, 'toggleActivo'])->name('materias.toggle-activo');
+        Route::post('/materias', [\App\Http\Controllers\Director\CU3Materias\MateriaController::class, 'registrarMateria'])->name('materias.store');
+        Route::put('/materias/{id}', [\App\Http\Controllers\Director\CU3Materias\MateriaController::class, 'actualizarMateria'])->name('materias.update');
+        Route::patch('/materias/{id}/toggle-activo', [\App\Http\Controllers\Director\CU3Materias\MateriaController::class, 'cambiarEstado'])->name('materias.toggle-activo');
 
         // CU5 Malla Curricular
-        Route::post('/carreras/{id}/niveles', [\App\Http\Controllers\Director\CU5Malla\MallaController::class, 'storeNivel'])->name('malla.nivel.store');
-        Route::delete('/niveles/{id}', [\App\Http\Controllers\Director\CU5Malla\MallaController::class, 'destroyNivel'])->name('malla.nivel.destroy');
-        Route::post('/malla', [\App\Http\Controllers\Director\CU5Malla\MallaController::class, 'storeMalla'])->name('malla.store');
-        Route::delete('/malla/{id}', [\App\Http\Controllers\Director\CU5Malla\MallaController::class, 'destroyMalla'])->name('malla.destroy');
-        Route::post('/carreras/{id}/nueva-materia', [\App\Http\Controllers\Director\CU5Malla\MallaController::class, 'storeMateriaNueva'])->name('malla.materia.store');
+        Route::post('/carreras/{id}/niveles', [\App\Http\Controllers\Director\CU5Malla\MallaController::class, 'agregarNivel'])->name('malla.nivel.store');
+        Route::delete('/niveles/{id}', [\App\Http\Controllers\Director\CU5Malla\MallaController::class, 'eliminarNivel'])->name('malla.nivel.destroy');
+        Route::post('/malla', [\App\Http\Controllers\Director\CU5Malla\MallaController::class, 'asignarMateriaAMalla'])->name('malla.store');
+        Route::delete('/malla/{id}', [\App\Http\Controllers\Director\CU5Malla\MallaController::class, 'quitarDeMalla'])->name('malla.destroy');
+        Route::post('/carreras/{id}/nueva-materia', [\App\Http\Controllers\Director\CU5Malla\MallaController::class, 'crearYAsignarMateria'])->name('malla.materia.store');
 
         // CU8 Períodos
-        Route::post('/periodos', [\App\Http\Controllers\Director\CU8Periodos\PeriodoController::class, 'store'])->name('periodos.store');
-        Route::post('/periodos/lote', [\App\Http\Controllers\Director\CU8Periodos\PeriodoController::class, 'storeLote'])->name('periodos.lote');
+        Route::post('/periodos', [\App\Http\Controllers\Director\CU8Periodos\PeriodoController::class, 'registrarPeriodo'])->name('periodos.store');
+        Route::post('/periodos/lote', [\App\Http\Controllers\Director\CU8Periodos\PeriodoController::class, 'registrarLote'])->name('periodos.lote');
         Route::post('/periodos/siguiente-anio', [\App\Http\Controllers\Director\CU8Periodos\PeriodoController::class, 'clonarSiguienteAnio'])->name('periodos.siguiente-anio');
-        Route::put('/periodos/{id}', [\App\Http\Controllers\Director\CU8Periodos\PeriodoController::class, 'update'])->name('periodos.update');
-        Route::patch('/periodos/{id}/toggle', [\App\Http\Controllers\Director\CU8Periodos\PeriodoController::class, 'toggleActivo'])->name('periodos.toggle');
-        Route::delete('/periodos/{id}', [\App\Http\Controllers\Director\CU8Periodos\PeriodoController::class, 'destroy'])->name('periodos.destroy');
+        Route::put('/periodos/{id}', [\App\Http\Controllers\Director\CU8Periodos\PeriodoController::class, 'actualizarPeriodo'])->name('periodos.update');
+        Route::patch('/periodos/{id}/toggle', [\App\Http\Controllers\Director\CU8Periodos\PeriodoController::class, 'cambiarEstado'])->name('periodos.toggle');
+        Route::delete('/periodos/{id}', [\App\Http\Controllers\Director\CU8Periodos\PeriodoController::class, 'eliminarPeriodo'])->name('periodos.destroy');
 
         // CU9 Grupos
-        Route::post('/grupos', [\App\Http\Controllers\Director\CU9Grupos\GrupoController::class, 'store'])->name('grupos.store');
+        Route::post('/grupos', [\App\Http\Controllers\Director\CU9Grupos\GrupoController::class, 'registrarGrupo'])->name('grupos.store');
         Route::post('/grupos/clonar', [\App\Http\Controllers\Director\CU9Grupos\GrupoController::class, 'clonar'])->name('grupos.clonar');
-        Route::put('/grupos/{id}', [\App\Http\Controllers\Director\CU9Grupos\GrupoController::class, 'update'])->name('grupos.update');
-        Route::patch('/grupos/{id}/toggle', [\App\Http\Controllers\Director\CU9Grupos\GrupoController::class, 'toggleActivo'])->name('grupos.toggle');
-        Route::delete('/grupos/{id}', [\App\Http\Controllers\Director\CU9Grupos\GrupoController::class, 'destroy'])->name('grupos.destroy');
+        Route::put('/grupos/{id}', [\App\Http\Controllers\Director\CU9Grupos\GrupoController::class, 'actualizarGrupo'])->name('grupos.update');
+        Route::patch('/grupos/{id}/toggle', [\App\Http\Controllers\Director\CU9Grupos\GrupoController::class, 'cambiarEstado'])->name('grupos.toggle');
+        Route::delete('/grupos/{id}', [\App\Http\Controllers\Director\CU9Grupos\GrupoController::class, 'eliminarGrupo'])->name('grupos.destroy');
         Route::delete('/periodos/{id}/grupos', [\App\Http\Controllers\Director\CU9Grupos\GrupoController::class, 'destroyPeriodo'])->name('grupos.destroyPeriodo');
 
     });

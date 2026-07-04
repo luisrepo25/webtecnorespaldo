@@ -16,6 +16,7 @@ class Cronograma extends Model
     ];
 
     protected $casts = [
+        'id_periodo' => 'integer',
         'fecha_inicio' => 'date',
         'fecha_fin' => 'date',
         'activo' => 'boolean',

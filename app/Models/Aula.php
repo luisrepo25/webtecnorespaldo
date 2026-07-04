@@ -13,4 +13,12 @@ class Aula extends Model
     protected $fillable = [
         'nombre', 'capacidad', 'ubicacion', 'tipo', 'activo',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'activo'    => 'boolean',
+            'capacidad' => 'integer',
+        ];
+    }
 }
