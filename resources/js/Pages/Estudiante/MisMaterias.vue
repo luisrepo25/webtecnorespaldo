@@ -93,8 +93,9 @@ const estadoLabel = (estado) => {
 };
 
 const tipoLabel = (tipo) => ({
+    tecnico:          'Técnico Medio',
     tecnico_superior: 'Técnico Superior',
-    tecnico_medio:    'Técnico Medio',
+    curso_libre:      'Curso Libre',
 }[tipo] ?? tipo);
 
 const planLabel = (fp) => ({
