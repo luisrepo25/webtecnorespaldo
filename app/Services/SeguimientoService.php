@@ -2,12 +2,64 @@
 
 namespace App\Services;
 
+use App\Models\Carrera;
 use App\Models\Estudiante;
+use App\Models\Usuario;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class SeguimientoService
 {
+    // ── CU13.1 — Listado ─────────────────────────────────────────────────────
+
+    public function listarEstudiantes(string $buscar): Collection
+    {
+        $query = Usuario::where('id_rol', 5)
+            ->with('estudiante')
+            ->orderBy('apellido')
+            ->orderBy('nombre');
+
+        if ($buscar) {
+            $query->where(function ($q) use ($buscar) {
+                $q->where('nombre',    'ilike', "%{$buscar}%")
+                  ->orWhere('apellido', 'ilike', "%{$buscar}%")
+                  ->orWhere('dni',      'ilike', "%{$buscar}%")
+                  ->orWhere('email',    'ilike', "%{$buscar}%");
+            });
+        }
+
+        $usuarios   = $query->get();
+        $idCarreras = $usuarios->map(fn($u) => $u->estudiante?->id_carrera_actual)->filter()->unique();
+        $carreras   = Carrera::whereIn('id_carrera', $idCarreras)->get()->keyBy('id_carrera');
+
+        return $usuarios->map(function ($u) use ($carreras) {
+            $c = $carreras->get($u->estudiante?->id_carrera_actual);
+            return [
+                'id_usuario' => $u->id_usuario,
+                'nombre'     => $u->nombre,
+                'apellido'   => $u->apellido,
+                'email'      => $u->email,
+                'dni'        => $u->dni,
+                'activo'     => $u->activo,
+                'legajo'     => $u->estudiante?->legajo,
+                'carrera'    => $c ? ['id' => $c->id_carrera, 'nombre' => $c->nombre] : null,
+            ];
+        });
+    }
+
+    public function resolverCarrera(?int $idCarrera, bool $withDuracion = false): ?array
+    {
+        if (!$idCarrera) return null;
+        $c = Carrera::find($idCarrera);
+        if (!$c) return null;
+
+        $data = ['id' => $c->id_carrera, 'nombre' => $c->nombre];
+        if ($withDuracion) $data['duracion_niveles'] = $c->duracion_niveles;
+        return $data;
+    }
+
+    // ── CU13.2 — Historial ───────────────────────────────────────────────────
+
     public function getHistorialCompleto(Estudiante $estudiante): Collection
     {
         $historial = DB::table('inscripciones as i')

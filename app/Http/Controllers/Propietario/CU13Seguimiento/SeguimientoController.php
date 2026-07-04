@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Propietario\CU13Seguimiento;
 
 use App\Http\Controllers\Controller;
-use App\Models\Carrera;
 use App\Models\Estudiante;
 use App\Models\Usuario;
 use App\Services\BitacoraService;
@@ -19,37 +18,8 @@ class SeguimientoController extends Controller
     public function index(Request $request)
     {
         $buscar = $request->input('buscar', '');
-
-        $query = Usuario::where('id_rol', 5)
-            ->with('estudiante')
-            ->orderBy('apellido')
-            ->orderBy('nombre');
-
-        if ($buscar) {
-            $query->where(function ($q) use ($buscar) {
-                $q->where('nombre',   'ilike', "%{$buscar}%")
-                  ->orWhere('apellido', 'ilike', "%{$buscar}%")
-                  ->orWhere('dni',      'ilike', "%{$buscar}%")
-                  ->orWhere('email',    'ilike', "%{$buscar}%");
-            });
-        }
-
-        $estudiantes = $query->get()->map(function ($u) {
-            $carrera = $this->resolverCarrera($u->estudiante?->id_carrera_actual);
-            return [
-                'id_usuario' => $u->id_usuario,
-                'nombre'     => $u->nombre,
-                'apellido'   => $u->apellido,
-                'email'      => $u->email,
-                'dni'        => $u->dni,
-                'activo'     => $u->activo,
-                'legajo'     => $u->estudiante?->legajo,
-                'carrera'    => $carrera,
-            ];
-        });
-
         return Inertia::render('Propietario/CU13Seguimiento/Index', [
-            'estudiantes' => $estudiantes,
+            'estudiantes' => $this->seguimiento->listarEstudiantes($buscar),
             'filtros'     => ['buscar' => $buscar],
         ]);
     }
@@ -59,7 +29,7 @@ class SeguimientoController extends Controller
     {
         $usuario    = Usuario::where('id_usuario', $id)->where('id_rol', 5)->firstOrFail();
         $estudiante = Estudiante::where('id_usuario', $id)->first();
-        $carrera    = $this->resolverCarrera($estudiante?->id_carrera_actual, withDuracion: true);
+        $carrera    = $this->seguimiento->resolverCarrera($estudiante?->id_carrera_actual, withDuracion: true);
 
         $historial = $estudiante
             ? $this->seguimiento->getHistorialCompleto($estudiante)
@@ -106,17 +76,5 @@ class SeguimientoController extends Controller
         return response()->json(
             $this->seguimiento->validarRecurso($idUsuario, $idMateria)
         );
-    }
-
-    // ── Helper privado ────────────────────────────────────────────────────────
-    private function resolverCarrera(?int $idCarrera, bool $withDuracion = false): ?array
-    {
-        if (!$idCarrera) return null;
-        $c = Carrera::find($idCarrera);
-        if (!$c) return null;
-
-        $data = ['id' => $c->id_carrera, 'nombre' => $c->nombre];
-        if ($withDuracion) $data['duracion_niveles'] = $c->duracion_niveles;
-        return $data;
     }
 }
